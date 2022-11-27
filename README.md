@@ -16,7 +16,7 @@ to assist time-to-event prediction as well as clustering.
 
 ### 💡 Method
 
-<img align="right" src="DCSM_model_arch.png"/>
+<img align="right" src="DCSM_model_arch.png" width="500" />
 
 Similar to the mixture models, we assume that the timing information of 
 survival data is _generatively_ described by a mixture of certain 
