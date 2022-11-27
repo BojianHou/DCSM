@@ -15,7 +15,6 @@ def init_config():
     # model hyper-parameters
     parser.add_argument('--dataset', type=str, default='PBC',
                         help='dataset in [sim, support, flchain, PBC, FRAMINGHAM]')
-    # parser.add_argument('--GPUID', type=str, default='1', help='GPU ID')
     parser.add_argument('--is_normalize', type=bool, default=True, help='whether to normalize data')
     parser.add_argument('--is_cluster', type=bool, default=True, help='whether to use DCSM to do clustering')
     parser.add_argument('--is_generate_sim', type=bool, default=True, help='whether we generate simulation data')

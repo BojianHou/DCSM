@@ -1,3 +1,7 @@
+"""
+This module provides several functions for model training utilities.
+"""
+
 from tqdm import tqdm
 import numpy as np
 from copy import deepcopy

@@ -62,7 +62,7 @@ class DeepClusteringSurvivalMachinesTorch(nn.Module):
   It inherits from the torch.nn.Module class and includes references to the
   representation learning MLP, the parameters of the underlying distributions
   and the forward function which is called whenver data is passed to the
-  module. Each of the parameters are nn.Parameters and torch automatically
+  module. Each of the parameters belongs to nn.Parameters and torch automatically
   keeps track and computes gradients for them.
 
   Parameters
@@ -111,31 +111,6 @@ class DeepClusteringSurvivalMachinesTorch(nn.Module):
                 self.shape = nn.ParameterDict({str(r + 1): nn.Parameter(-torch.ones(self.k))
                                                for r in range(self.risks)})  # .cuda()
                 self.scale = nn.ParameterDict({str(r + 1): nn.Parameter(-torch.ones(self.k))
-                                               for r in range(self.risks)})  # .cuda()
-
-        elif self.dist in ['Normal']:
-            self.act = nn.Identity()
-            if self.fix:  # means using fixed base distribution
-                self.shape = nn.ParameterDict({str(r + 1): nn.Parameter(torch.randn(self.k, requires_grad=True))
-                                               for r in range(self.risks)})  # .cuda()
-                self.scale = nn.ParameterDict({str(r + 1): nn.Parameter(torch.randn(self.k, requires_grad=True))
-                                               for r in range(self.risks)})  # .cuda()
-            else:
-                self.shape = nn.ParameterDict({str(r + 1): nn.Parameter(torch.ones(self.k))
-                                               for r in range(self.risks)})  # .cuda()
-                self.scale = nn.ParameterDict({str(r + 1): nn.Parameter(torch.ones(self.k))
-                                               for r in range(self.risks)})  # .cuda()
-        elif self.dist in ['LogNormal']:
-            self.act = nn.Tanh()
-            if self.fix:  # means using fixed base distribution
-                self.shape = nn.ParameterDict({str(r + 1): nn.Parameter(torch.randn(self.k, requires_grad=True))
-                                               for r in range(self.risks)})
-                self.scale = nn.ParameterDict({str(r + 1): nn.Parameter(torch.randn(self.k, requires_grad=True))
-                                               for r in range(self.risks)})  # .cuda()
-            else:
-                self.shape = nn.ParameterDict({str(r + 1): nn.Parameter(torch.ones(self.k))
-                                               for r in range(self.risks)})
-                self.scale = nn.ParameterDict({str(r + 1): nn.Parameter(torch.ones(self.k))
                                                for r in range(self.risks)})  # .cuda()
         else:
             raise NotImplementedError('Distribution: ' + self.dist + ' not implemented' +

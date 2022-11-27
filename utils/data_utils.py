@@ -1,5 +1,5 @@
 """This module is implemented to load data.
-We provide four real data: support, flchain, PBC and FRAMINGHAM.
+We provide four real-world datasets: support, flchain, PBC and FRAMINGHAM.
 We also provide the code for generating simulation data.
 """
 
@@ -12,9 +12,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_spd_matrix, make_low_rank_matrix
 import numpy as np
-from numpy.random import multivariate_normal, uniform, choice, normal
-import tensorflow_probability as tfp
-import os
+from numpy.random import multivariate_normal, uniform, choice
 import io
 import pkgutil
 

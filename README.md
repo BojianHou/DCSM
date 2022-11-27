@@ -50,8 +50,10 @@ It accepts following arguments:
                         whether to normalize data
   --is_cluster IS_CLUSTER
                         whether to use DCSM to do clustering
-  --is_old_sim IS_OLD_SIM
-                        whether we use the old simulation data
+  --is_generate_sim IS_GENERATE_SIM
+                        whether we generate simulation data
+  --is_save_sim IS_SAVE_SIM
+                        whether we save simulation data
   --num_inst NUM_INST   specifies the number of instances for simulation data
   --num_feat NUM_FEAT   specifies the number of features for simulation data
   --cuda_device CUDA_DEVICE

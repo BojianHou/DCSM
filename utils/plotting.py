@@ -56,6 +56,8 @@ def plot_loss_c_index(results_all, lr, epoch, bs):
 
 
 def visualize(X_train_list, X_test_list, data_name, is_normalize=0, is_TSNE=1):
+    """This function is to visualize the scatter plot with clustering information"""
+
     X_train = np.concatenate(X_train_list)
     X_test = np.concatenate(X_test_list)
     X = np.concatenate((X_train, X_test), axis=0)
@@ -74,26 +76,9 @@ def visualize(X_train_list, X_test_list, data_name, is_normalize=0, is_TSNE=1):
         embeddings = trans.embedding_
         # embeddings = []
 
-    # train_color_list = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple']
-    # test_color_list = ['tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
-    # plt.scatter(trans.embedding_[:, 0], trans.embedding_[:, 1], s=5, c=new_flag, cmap='Spectral')
-    # plt.show()
 
     xlim = [-100, 95]
     ylim = [-90, 90]
-    # xlim = [-25, 20]
-    # ylim = [-25, 20]
-    # xlim = [-30, 30]
-    # ylim = [-30, 30]
-
-    # visualize all the train and test data points in X
-    # plt.scatter(embeddings[:len(X_train), 0], embeddings[:len(X_train), 1], s=5, label='Train')
-    # plt.scatter(embeddings[len(X_train):, 0], embeddings[len(X_train):, 1], s=5, label='Test')
-    # plt.xlim(xlim)
-    # plt.ylim(ylim)
-    # plt.title(data_name)
-    # plt.legend()
-    # plt.show()
 
     # show each cluster separately on all train data
     len_train = 0
@@ -126,28 +111,13 @@ def visualize(X_train_list, X_test_list, data_name, is_normalize=0, is_TSNE=1):
     plt.show()
     plt.close()
 
-    # show each cluster separately on both train and test data
-    # len_train = 0
-    # len_test = len(X_train)
-    # for idx, f in enumerate(X_train_list):
-    #     plt.scatter(embeddings[len_train:(len_train + len(f)), 0],
-    #                 embeddings[len_train:(len_train + len(f)), 1],
-    #                 s=5, label='Train Cluster {}'.format(idx))
-    #     plt.scatter(embeddings[len_test:(len_test + len(X_test_list[idx])), 0],
-    #                 embeddings[len_test:(len_test + len(X_test_list[idx])), 1],
-    #                 s=5, label='Test Cluster {}'.format(idx))
-    #     len_train += len(f)
-    #     len_test += len(X_test_list[idx])
-    #     plt.xlim([-100, 95])
-    #     plt.ylim([-90, 90])
-    #     plt.title(data_name)
-    #     plt.legend()
-    #     plt.show()
-
 
 def plot_KM(y_list, cluster_method, data_name,
-            is_selected=False, is_train=True, is_lifelines=True,
-            seed=42, num_inst=1000, num_feat=200, is_expert=False, shape=[], scale=[], t_horizon=10):
+            is_train=True, is_lifelines=True,
+            seed=42, num_inst=1000, num_feat=200,
+            is_expert=False, shape=[], scale=[], t_horizon=10):
+    """This function is to plot the Kaplan-Meier curve regarding different clusters"""
+
     if is_train:
         stage = 'train'
     else:
@@ -165,15 +135,6 @@ def plot_KM(y_list, cluster_method, data_name,
         chisq, pval = results.test_statistic, results.p_value
     else:
         chisq, pval = compare_survival(np.concatenate(y_list), group_indicator)
-
-    # group_indicator = []
-    # for idx, cluster in enumerate(y_list):
-    #     if idx == 0:
-    #         group_indicator.append([idx] * len(cluster))
-    #     if idx == 2:
-    #         group_indicator.append([idx - 1] * len(cluster))
-    # group_indicator = np.concatenate(group_indicator)
-    # chisq, pval = compare_survival(np.concatenate(y_list[0], [2]), group_indicator)
 
     print('Test statistic of {}: {:.4e}'.format(stage, chisq))
     print('P value of {}: {:.4e}'.format(stage, pval))
@@ -206,27 +167,17 @@ def plot_KM(y_list, cluster_method, data_name,
                 s[j] = -(np.power(np.exp(b) * t_space[j], np.exp(k)))
             plt.plot(t_space, s, label='Expert Distribution {}'.format(i))
 
-    # select = 'Select Features' if is_selected else 'Original Features'
-    # plt.title("{}, cluster method: {}, {}, {}".format(data_name, cluster_method, stage, select))
-    # plt.title("Data: {}, Method: {}, Seed: {}".format(data_name, cluster_method, seed))
     plt.title("LogRank: {:.2f}".format(chisq), fontsize=18)
-    # plt.title("P={:.4e} Log Rank={:.2f}".format(pval, chisq), fontsize=14)
-    # plt.xlabel("Time (Days) P={:.4e} LogRank={:.2f}".format(pval, chisq), fontsize=14)
     plt.xlabel("Time", fontsize=18)
-    # plt.xlabel('Time (Days)', fontsize=14)
     plt.ylabel("Survival Probability", fontsize=18)
     plt.legend(fontsize=18)
 
-    if is_selected:
-        plt.savefig('./Figures/{}_selected_{}_KM_plot_#clusters{}_{}.png'.
-                    format(cluster_method, stage, len(y_list), data_name))
+    if data_name == 'sim':
+        plt.savefig('./Figures/{}_{}_KM_plot_#clusters{}_{}_{}x{}_seed{}.png'.
+                    format(cluster_method, stage, len(y_list), data_name, num_inst, num_feat, seed))
     else:
-        if data_name == 'sim':
-            plt.savefig('./Figures/{}_{}_KM_plot_#clusters{}_{}_uniform_new_{}x{}_seed{}.png'.
-                        format(cluster_method, stage, len(y_list), data_name, num_inst, num_feat, seed))
-        else:
-            plt.savefig('./Figures/{}_{}_KM_plot_#clusters{}_{}_seed{}.png'.
-                        format(cluster_method, stage, len(y_list), data_name, seed))
+        plt.savefig('./Figures/{}_{}_KM_plot_#clusters{}_{}_seed{}.png'.
+                    format(cluster_method, stage, len(y_list), data_name, seed))
     plt.show()
     plt.close()
     return pval, chisq
