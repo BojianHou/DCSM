@@ -66,7 +66,7 @@ def pretrain_dcsm(model, t_train, e_train, t_valid, e_valid,
     patience = 0
     costs = []
 
-    print('Pretraining...')
+    print('\nPretraining...')
     for i in tqdm(range(n_iter)):
 
         optimizer.zero_grad()

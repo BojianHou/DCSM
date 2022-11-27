@@ -13,12 +13,12 @@ import pickle as pkl
 def init_config():
     parser = argparse.ArgumentParser(description='Deep Clustering Survival Machines')
     # model hyper-parameters
-    parser.add_argument('--dataset', type=str, default='PBC',
-                        help='dataset in [sim, support, flchain, PBC, FRAMINGHAM]')
+    parser.add_argument('--dataset', type=str, default='FRAMINGHAM',
+                        help='dataset in [support, flchain, PBC, FRAMINGHAM, sim]')
     parser.add_argument('--is_normalize', type=bool, default=True, help='whether to normalize data')
     parser.add_argument('--is_cluster', type=bool, default=True, help='whether to use DCSM to do clustering')
     parser.add_argument('--is_generate_sim', type=bool, default=True, help='whether we generate simulation data')
-    parser.add_argument('--is_save_sim', type=bool, default=False, help='whether we save simulation data')
+    parser.add_argument('--is_save_sim', type=bool, default=True, help='whether we save simulation data')
     parser.add_argument('--num_inst', default=200, type=int,
                         help='specifies the number of instances for simulation data')
     parser.add_argument('--num_feat', default=10, type=int,
@@ -55,6 +55,7 @@ is_normalized = args.is_normalize
 #      Train and Test Models
 ########################################
 
+# this may not be optimal
 param = {'learning_rate': 0.001, 'layers': [50], 'k': 2,
         'iters': 2000, 'distribution': 'Weibull', 'discount': 0.5}
 

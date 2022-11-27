@@ -3,7 +3,6 @@ This module provides several helper functions for model training and testing.
 
 """
 
-
 import numpy as np
 from sksurv.metrics import concordance_index_censored
 from lifelines import KaplanMeierFitter

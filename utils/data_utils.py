@@ -67,7 +67,6 @@ def load_pbc_dataset():
     event = data['status2'].values
 
     x = SimpleImputer(missing_values=np.nan, strategy='mean').fit_transform(x)
-    # x_ = StandardScaler().fit_transform(x)
     x_ = x
 
     return x_, time, event, column_names
@@ -94,7 +93,6 @@ def load_framingham_dataset():
     event = data['DEATH'].values
 
     x = SimpleImputer(missing_values=np.nan, strategy='mean').fit_transform(x)
-    # x_ = StandardScaler().fit_transform(x)
     x_ = x
     return x_, time, event, column_names
 
@@ -149,6 +147,8 @@ def simulate_surv(p: int, n: int, k: int, latent_dim: int, p_cens: float, seed: 
     # Sanity checks
     assert p > 0 and latent_dim > 0 and n > 0 and k > 0
     assert 1 < k < n
+    while latent_dim > p:
+        latent_dim = latent_dim // 2
     assert latent_dim < p
     assert len(xrange) == 2 and xrange[0] < xrange[1]
     assert len(brange) == 2 and brange[0] < brange[1]
@@ -256,7 +256,7 @@ def simulate_surv(p: int, n: int, k: int, latent_dim: int, p_cens: float, seed: 
     sim_data['Z'] = Z
 
     if is_save_sim:
-        with open('../datasets/sim_data_({},{}).pkl'.format(n, p), 'wb') as f:
+        with open('datasets/sim_data_({},{}).pkl'.format(n, p), 'wb') as f:
             pkl.dump(sim_data, f)
 
     return X, t, d, c, Z, mlp_dec, means, cov_mats, coeffs, intercepts

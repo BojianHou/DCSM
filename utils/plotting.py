@@ -154,7 +154,6 @@ def plot_KM(y_list, cluster_method, data_name,
             # this does not provide confidence interval
             x, y = kaplan_meier_estimator([item[0] for item in cluster], [item[1] for item in cluster])
             plt.step(x, y, where="post", label='Cluster {}, #{}'.format(idx, len(cluster)))
-            # plt.ylim(0, 1)
 
     if is_expert:
         step = 100
