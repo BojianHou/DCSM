@@ -130,8 +130,6 @@ def load_sim_data(is_old, n, d):
     scaler.fit(X)
     X = scaler.transform(X)
 
-    # x_train, x_test, t_train, t_test, d_train, d_test, c_train, c_test = train_test_split(X, t, d, c, test_size=.3,
-    #                                                                                       random_state=42)
     column_names = []
 
     return X, t, d, column_names
