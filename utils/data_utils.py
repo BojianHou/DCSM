@@ -115,7 +115,7 @@ def load_sim_data(is_old, n, d):
                                                                                            xrange=[-.5, .5])
 
     else:
-        with open('./datasets_from_Vadesc/sim_data_uniform_new_({},{}).pkl'.format(n, d), 'rb') as f:
+        with open('./datasets/sim_data_uniform_new_({},{}).pkl'.format(n, d), 'rb') as f:
             sim_data = pkl.load(f)
 
         X = sim_data['X']
