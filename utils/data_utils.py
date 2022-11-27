@@ -22,7 +22,9 @@ import pkgutil
 def load_data(args, random_state=42):
     name = args.dataset
     if name == 'sim':
-        x, t, e, column_names = load_sim_data(is_old=args.is_old_sim, n=args.num_inst, d=args.num_feat)
+        x, t, e, column_names = load_sim_data(is_generate_sim=args.is_generate_sim,
+                                              n=args.num_inst, d=args.num_feat,
+                                              is_save_sim=args.is_save_sim)
         y = combine_t_e(t, e)
         X_train, X_test, y_train, y_test = \
             train_test_split(x, y, test_size=0.3, random_state=random_state, stratify=e)
@@ -99,23 +101,24 @@ def load_framingham_dataset():
     return x_, time, event, column_names
 
 
-def load_sim_data(is_old, n, d):
-    if is_old:
-        X, t, d, c, Z, mus, sigmas, betas, betas_0, mlp_dec = simulate_nonlin_profile_surv(p=d, n=n,  # p=1000, n=60000
-                                                                                           latent_dim=16, k=3,
-                                                                                           p_cens=.3, seed=42,
-                                                                                           clust_mean=True,
-                                                                                           clust_cov=True,
-                                                                                           clust_coeffs=True,
-                                                                                           clust_intercepts=True,
-                                                                                           balanced=True,
-                                                                                           weibull_k=1,
-                                                                                           brange=[-10.0, 10.0],
-                                                                                           isotropic=True,
-                                                                                           xrange=[-.5, .5])
+def load_sim_data(is_generate_sim, n=200, d=500, is_save_sim=False):
+    if is_generate_sim:
+        X, t, d, c, Z, mus, sigmas, betas, betas_0, mlp_dec = simulate_surv(p=d, n=n,
+                                                                           latent_dim=16, k=3,
+                                                                           p_cens=.3, seed=42,
+                                                                           clust_mean=True,
+                                                                           clust_cov=True,
+                                                                           clust_coeffs=True,
+                                                                           clust_intercepts=True,
+                                                                           balanced=True,
+                                                                           weibull_k=1,
+                                                                           brange=[-10.0, 10.0],
+                                                                           isotropic=True,
+                                                                           xrange=[-.5, .5],
+                                                                           is_save_sim=is_save_sim)
 
     else:
-        with open('./datasets/sim_data_uniform_new_({},{}).pkl'.format(n, d), 'rb') as f:
+        with open('./datasets/sim_data_({},{}).pkl'.format(n, d), 'rb') as f:
             sim_data = pkl.load(f)
 
         X = sim_data['X']
@@ -135,9 +138,9 @@ def load_sim_data(is_old, n, d):
     return X, t, d, column_names
 
 
-def simulate_nonlin_profile_surv(p: int, n: int, k: int, latent_dim: int, p_cens: float, seed: int, p_c=None,
-                                 balanced=False, clust_mean=True, clust_cov=True, isotropic=False, clust_coeffs=True,
-                                 clust_intercepts=True, weibull_k=1, xrange=[-5, 5], brange=[-1, 1]):
+def simulate_surv(p: int, n: int, k: int, latent_dim: int, p_cens: float, seed: int, p_c=None,
+                 balanced=False, clust_mean=True, clust_cov=True, isotropic=False, clust_coeffs=True,
+                 clust_intercepts=True, weibull_k=1, xrange=[-5.0, 5.0], brange=[-1.0, 1.0], is_save_sim=False):
     """
     Simulates data with heterogeneous survival profiles and nonlinear (!) relationships
     (covariates are generated from latent features using an MLP decoder).
@@ -158,13 +161,13 @@ def simulate_nonlin_profile_surv(p: int, n: int, k: int, latent_dim: int, p_cens
         assert len(p_c) == k and sum(p_c) == 1
     else:
         if balanced:
-            p_c = np.ones((k, )) / k
+            p_c = np.ones((k,)) / k
         else:
-            p_c = uniform(0, 1, (k, ))
+            p_c = uniform(0, 1, (k,))
             p_c = p_c / np.sum(p_c)
 
     # Cluster assignments
-    c = choice(a=np.arange(k), size=(n, ), replace=True, p=p_c)
+    c = choice(a=np.arange(k), size=(n,), replace=True, p=p_c)
 
     # Cluster-specific means
     means = np.zeros((k, latent_dim))
@@ -190,23 +193,26 @@ def simulate_nonlin_profile_surv(p: int, n: int, k: int, latent_dim: int, p_cens
         else:
             cov_mats.append(sigma)
 
+    # Latent features mutli-uniform
+    low = uniform(low=xrange[0], high=0, size=k)
+    high = uniform(low=0, high=xrange[1], size=k)
     Z = np.zeros((n, latent_dim))
-    tfd = tfp.distributions
-    shape = uniform(1, 10, (k, latent_dim))  # randomly choose between 1 and 50
-    scale = uniform(1, 10, (k, latent_dim))
     for l in range(k):
         n_l = np.sum(c == l)
-        dist = tfd.Weibull(concentration=shape[l, :], scale=scale[l, :])
-        Z_l = dist.sample(n_l)
+        Z_l = uniform(low=low[l], high=high[l], size=(n_l, latent_dim))
         Z[c == l, :] = Z_l
 
     # Predictors
     mlp_dec = random_nonlin_map(n_in=latent_dim, n_out=p, n_hidden=int((latent_dim + p) / 2))
     X = mlp_dec(Z)
+    # add noise to X
+    mu, sigma = 0, 0.1
+    noise = np.random.normal(mu, sigma, X.shape)
+    X = X + noise
 
     # Cluster-specific coefficients for the survival model
     coeffs = np.zeros((k, latent_dim))
-    intercepts = np.zeros((k, ))
+    intercepts = np.zeros((k,))
     beta = uniform(brange[0], brange[1], (1, latent_dim))
     beta0 = uniform(brange[0], brange[1], (1, 1))
     for l in range(k):
@@ -222,7 +228,7 @@ def simulate_nonlin_profile_surv(p: int, n: int, k: int, latent_dim: int, p_cens
             intercepts[l] = beta0
 
     # Survival times
-    t = np.zeros((n, ))
+    t = np.zeros((n,))
     for l in range(k):
         n_l = np.sum(c == l)
         Z_l = Z[c == l, :]
@@ -234,11 +240,26 @@ def simulate_nonlin_profile_surv(p: int, n: int, k: int, latent_dim: int, p_cens
 
         t[c == l] = t_l
 
+    # add noise to t
+    mu, sigma = 0, 0.1
+    noise = np.random.normal(mu, sigma, t.shape)
+    t = t + np.abs(noise)
     # Censoring
     # NB: d == 1 if failure; 0 if censored
-    d = (uniform(0, 1, (n, )) >= p_cens) * 1.0
-    t_cens = uniform(0, t, (n, ))
+    d = (uniform(0, 1, (n,)) >= p_cens) * 1.0
+    t_cens = uniform(0, t, (n,))
     t[d == 0] = t_cens[d == 0]
+
+    sim_data = {}
+    sim_data['X'] = X
+    sim_data['t'] = t
+    sim_data['e'] = d
+    sim_data['c'] = c
+    sim_data['Z'] = Z
+
+    if is_save_sim:
+        with open('../datasets/sim_data_({},{}).pkl'.format(n, p), 'wb') as f:
+            pkl.dump(sim_data, f)
 
     return X, t, d, c, Z, mlp_dec, means, cov_mats, coeffs, intercepts
 

@@ -18,7 +18,8 @@ def init_config():
     # parser.add_argument('--GPUID', type=str, default='1', help='GPU ID')
     parser.add_argument('--is_normalize', type=bool, default=True, help='whether to normalize data')
     parser.add_argument('--is_cluster', type=bool, default=True, help='whether to use DCSM to do clustering')
-    parser.add_argument('--is_old_sim', type=bool, default=False, help='whether we use the old simulation data')
+    parser.add_argument('--is_generate_sim', type=bool, default=True, help='whether we generate simulation data')
+    parser.add_argument('--is_save_sim', type=bool, default=False, help='whether we save simulation data')
     parser.add_argument('--num_inst', default=200, type=int,
                         help='specifies the number of instances for simulation data')
     parser.add_argument('--num_feat', default=10, type=int,
