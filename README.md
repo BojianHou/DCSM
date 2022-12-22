@@ -36,7 +36,7 @@ All required libraries are included in the conda environment specified by
 ```
 conda create -n DCSM               # create an environment named "DCSM"
 conda activate DCSM                # activate environment
-pip install requirements.txt       # install required packages
+pip install -r requirements.txt       # install required packages
 ```
 
 ### 🔨 Usage
