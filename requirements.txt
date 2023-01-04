@@ -176,13 +176,6 @@ stack-data==0.6.2
 stevedore==4.1.1
 tbb==2021.8.0
 tenacity==8.1.0
-tensorboard==2.11.0
-tensorboard-data-server==0.6.1
-tensorboard-plugin-wit==1.8.1
-tensorflow==2.11.0
-tensorflow-estimator==2.11.0
-tensorflow-io-gcs-filesystem==0.28.0
-tensorflow-probability==0.19.0
 termcolor==2.1.1
 texttable==1.6.7
 thinc==8.1.5
