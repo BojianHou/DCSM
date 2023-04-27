@@ -1,8 +1,8 @@
 # Deep Clustering Survival Machines with Interpretable Expert Distributions
 
 This repository holds the official code for the paper 
-"[*Deep Clustering Survival Machines with Interpretable Expert Distributions*]()", 
-submitted to [ISBI 2023](http://2023.biomedicalimaging.org/en/).  
+"[*Deep Clustering Survival Machines with Interpretable Expert Distributions*](https://arxiv.org/abs/2301.11826)", 
+ published in [ISBI 2023](http://2023.biomedicalimaging.org/en/).  
 
 
 ### 🦸‍♀ Motivation
