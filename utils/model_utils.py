@@ -128,20 +128,20 @@ def train_dcsm(model,
                             lr=1e-2,
                             thres=1e-4)
 
-    if model.fix == False:
-        for r in range(model.risks):
-            model.shape[str(r + 1)].data.fill_(float(premodel.shape[str(r + 1)]))
-            model.scale[str(r + 1)].data.fill_(float(premodel.scale[str(r + 1)]))
-    else:
-        for r in range(model.risks):
-            # initialize using the pretrained shape and scale with a small perturbation,
-            # whose mean is zero, std is the 1/10 of the original value
-            model.shape[str(r + 1)].data = float(premodel.shape[str(r + 1)]) + \
-                                           torch.normal(mean=torch.zeros(model.k),
-                                                        std=np.abs(float(premodel.shape[str(r + 1)])) / 10)
-            model.scale[str(r + 1)].data = float(premodel.scale[str(r + 1)]) + \
-                                           torch.normal(mean=torch.zeros(model.k),
-                                                        std=np.abs(float(premodel.scale[str(r + 1)])) / 10)
+    # if model.fix == False:
+    for r in range(model.risks):
+        model.shape[str(r + 1)].data.fill_(float(premodel.shape[str(r + 1)]))
+        model.scale[str(r + 1)].data.fill_(float(premodel.scale[str(r + 1)]))
+#     else:
+#         for r in range(model.risks):
+#             # initialize using the pretrained shape and scale with a small perturbation,
+#             # whose mean is zero, std is the 1/10 of the original value
+#             model.shape[str(r + 1)].data = float(premodel.shape[str(r + 1)]) + \
+#                                            torch.normal(mean=torch.zeros(model.k),
+#                                                         std=np.abs(float(premodel.shape[str(r + 1)])) / 10)
+#             model.scale[str(r + 1)].data = float(premodel.scale[str(r + 1)]) + \
+#                                            torch.normal(mean=torch.zeros(model.k),
+#                                                         std=np.abs(float(premodel.scale[str(r + 1)])) / 10)
 
     model.double()
     optimizer = get_optimizer(model, lr)
