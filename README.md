@@ -132,11 +132,13 @@ in **Proceedings of the ACM Conference on Health, Inference, and Learning**,
 ### 🙂 Citation
 
 ```
-@inproceedings{HouFan2023,
-  title={Deep Clustering Survival Machines with Interpretable Expert Distribution},
-  author={Bojian Hou, Hongming Li, Zhicheng Jiao, Zhen Zhou, Hao Zheng, Yong Fan},
-  booktitle={International Symposium on Biomedical Imaging},
+@inproceedings{hou2023deep,
+  title={Deep Clustering Survival Machines with Interpretable Expert Distributions},
+  author={Hou, Bojian and Li, Hongming and Jiao, Zhicheng and Zhou, Zhen and Zheng, Hao and Fan, Yong},
+  booktitle={2023 IEEE 20th International Symposium on Biomedical Imaging (ISBI)},
+  pages={1--4},
   year={2023},
+  organization={IEEE}
 }
 
 @article{hou2024interpretable,
