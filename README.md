@@ -1,8 +1,12 @@
-# Deep Clustering Survival Machines with Interpretable Expert Distributions
+# Deep Clustering Survival Machines (DCSM)
 
 This repository holds the official code for the paper 
-"[*Deep Clustering Survival Machines with Interpretable Expert Distributions*](https://arxiv.org/abs/2301.11826)", 
+
+* "[*Deep Clustering Survival Machines with Interpretable Expert Distributions*](https://arxiv.org/abs/2301.11826)", 
  published in [ISBI 2023](http://2023.biomedicalimaging.org/en/).  
+
+* "[*Interpretable Deep Clustering Survival Machines for Alzheimer’s Disease Subtype Discovery*](https://www.sciencedirect.com/science/article/abs/pii/S1361841524001567)",
+ published in [Medical Image Analysis](https://www-sciencedirect-com.proxy.library.upenn.edu/journal/medical-image-analysis)
 
 
 ### 🦸‍♀ Motivation
@@ -133,5 +137,14 @@ in **Proceedings of the ACM Conference on Health, Inference, and Learning**,
   author={Bojian Hou, Hongming Li, Zhicheng Jiao, Zhen Zhou, Hao Zheng, Yong Fan},
   booktitle={International Symposium on Biomedical Imaging},
   year={2023},
+}
+
+@article{hou2024interpretable,
+  title={Interpretable deep clustering survival machines for Alzheimer’s disease subtype discovery},
+  author={Hou, Bojian and Wen, Zixuan and Bao, Jingxuan and Zhang, Richard and Tong, Boning and Yang, Shu and Wen, Junhao and Cui, Yuhan and Moore, Jason H and Saykin, Andrew J and others},
+  journal={Medical Image Analysis},
+  pages={103231},
+  year={2024},
+  publisher={Elsevier}
 }
 ```
